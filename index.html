@@ -23,6 +23,8 @@
     <script>
       // initialize Leaflet
       var map = L.map('map').setView({lon: 0, lat: 0}, 2);
+      var latitude = 0;
+      var longitude = 0;
 
       var avatar = L.icon({
         iconUrl: 'leaf-green.png',
@@ -44,11 +46,12 @@
 
       // show a marker on the map or L.marker([-23.601650, -46.681740]).addTo(map);
       L.marker({lon: -46.680590 , lat: -23.599200 }).bindPopup('Drogaria').addTo(map);
+      L.marker([latitude, longitude]).bindPopup('You').addTo(map);
      
       function showLocation(position) {
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
-        L.marker([latitude, longitude]).bindPopup('The center of the world').addTo(map);
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+      
         console.log("Latitude : " + latitude + " Longitude: " + longitude)
       }
 
