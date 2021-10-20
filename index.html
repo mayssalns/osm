@@ -23,7 +23,7 @@
     <script>
       // initialize Leaflet
 
-      var map = L.map('map').setView([0, 0], 8);
+      var map = L.map('map').setView([0, 0], 15);
 
       // add the OpenStreetMap tiles
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -45,20 +45,17 @@
       }).addTo(map);
  
 
-     
-
       function showLocation(position) {
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
-        console.log("Latitude : " + latitude + " Longitude: " + longitude)
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
 
-        L.setLatLng([latitude, longitude])
+        circle.setLatLng([latitude, longitude])
       }
 
       function showInitialLocation(position) {
-        console.log('POSITION', position)
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        map.setView([latitude, longitude], 15)
         circle.setLatLng([latitude, longitude])
       }
 
@@ -91,14 +88,11 @@
         }
       }
 
-    
-      watchPosition()
+      getLocation()
 
-    
-
-      document.addEventListener('DOMContentLoaded', function() {
-        getLocation()
-      })
+      setInterval(() => {
+        watchPosition()
+      },1000)
 
     </script>
 
