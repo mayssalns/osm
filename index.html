@@ -48,7 +48,7 @@
       function showLocation(position) {
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
-        L.marker([latitude, longitude], {icon:avatar}).bindPopup('The center of the world').addTo(map);
+        L.marker([latitude, longitude]).bindPopup('The center of the world').addTo(map);
         console.log("Latitude : " + latitude + " Longitude: " + longitude)
       }
 
