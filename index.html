@@ -22,18 +22,8 @@
 
     <script>
       // initialize Leaflet
-      var map = L.map('map').setView({lon: 0, lat: 0}, 2);
-      var latitude = 0;
-      var longitude = 0;
 
-      var avatar = L.icon({
-        iconUrl: 'leaf-green.png',
-        iconSize:     [38, 95], // size of the icon
-        shadowSize:   [50, 64], // size of the shadow
-        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-        shadowAnchor: [4, 62],  // the same for the shadow
-        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-    });
+      var map = L.map('map').setView([0, 0], 8);
 
       // add the OpenStreetMap tiles
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -44,15 +34,32 @@
       // show the scale bar on the lower left corner
       L.control.scale({imperial: true, metric: true}).addTo(map);
 
-      // show a marker on the map or L.marker([-23.601650, -46.681740]).addTo(map);
+      // Initial markers
       L.marker({lon: -46.680590 , lat: -23.599200 }).bindPopup('Drogaria').addTo(map);
-      L.marker([latitude, longitude]).bindPopup('You').addTo(map);
+
+      var circle = L.circle([0, 0], {
+        color: '#1967D2',
+        fillColor: '#1967D2',
+        fillOpacity: 0.5,
+        radius: 500
+      }).addTo(map);
+ 
+
      
+
       function showLocation(position) {
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
-      
         console.log("Latitude : " + latitude + " Longitude: " + longitude)
+
+        L.setLatLng([latitude, longitude])
+      }
+
+      function showInitialLocation(position) {
+        console.log('POSITION', position)
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+        circle.setLatLng([latitude, longitude])
       }
 
       function errorHandler(err) {
@@ -63,7 +70,7 @@
         }
       }
 			
-      function getLocation() {
+      function watchPosition() {
         if(navigator.geolocation) {
             // timeout at 60000 milliseconds (60 seconds)
             var options = {timeout:60000};
@@ -74,8 +81,24 @@
         }
       }
 
+      function getLocation() {
+        if(navigator.geolocation) {
+            // timeout at 60000 milliseconds (60 seconds)
+            var options = {timeout:60000};
+            navigator.geolocation.getCurrentPosition(showInitialLocation, errorHandler, options);
+        } else {
+            alert("Sorry, browser does not support geolocation!");
+        }
+      }
+
     
-      getLocation()
+      watchPosition()
+
+    
+
+      document.addEventListener('DOMContentLoaded', function() {
+        getLocation()
+      })
 
     </script>
 
