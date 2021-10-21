@@ -25,6 +25,14 @@
 
       var map = L.map('map').setView([0, 0], 15);
 
+      let  markers = [
+        {
+          position: L.latLng(-23.599200,-46.680590),
+          popup: 'Drogaria',
+          located: 0
+        }
+      ]
+    
       // add the OpenStreetMap tiles
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -35,9 +43,12 @@
       L.control.scale({imperial: true, metric: true}).addTo(map);
 
       // Initial markers
-      L.marker({lon: -46.680590 , lat: -23.599200 }).bindPopup('Drogaria').addTo(map);
-
-      var circle = L.circle([0, 0], {
+      markers.forEach(marker => {
+        marker.element = new L.Marker(marker.position)
+        marker.element.bindPopup(marker.popup).addTo(map);
+      });
+      
+      var avatar = L.circle([0, 0], {
         color: '#1967D2',
         fillColor: '#1967D2',
         fillOpacity: 0.5,
@@ -49,14 +60,21 @@
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
 
-        circle.setLatLng([latitude, longitude])
+        avatar.setLatLng([latitude, longitude])
+
+        markers.forEach(marker => {
+          if (L.latLng(latitude, longitude).equals(marker.position, 0.001)) {
+            map.removeLayer(marker.element);
+            marker.located = 1
+          }
+        })
       }
 
       function showInitialLocation(position) {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         map.setView([latitude, longitude], 15)
-        circle.setLatLng([latitude, longitude])
+        avatar.setLatLng([latitude, longitude])
       }
 
       function errorHandler(err) {
@@ -90,26 +108,8 @@
 
       getLocation()
 
-      // setInterval(() => {
-        watchPosition()
-      // },1000)
+      watchPosition()
 
     </script>
-
-  <!-- <script type="text/javascript">
-       var map = L.map('location-map').setView([	-1.4572002, -48.4653295], 17);
-       mapLink = '<a href="https:openstreetmap.org">OpenStreetMap</a>';
-       L.tileLayer(
-         'https:{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-           attribution: 'Map data &copy; ' + mapLink,
-           maxZoom: 20,
-         }).addTo(map);
-         L.tileLayer(
-         'https:{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-           attribution: 'Map data &copy; ' + mapLink,
-           maxZoom: 20,
-         }).addTo(map);
-         var marker = L.marker([-23.601650, -46.681740]).addTo(map);
-     </script> -->
   </body>
 </html>
